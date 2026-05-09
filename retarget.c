@@ -1,10 +1,4 @@
 #include "hardware.h"
-
-int main()
-{
-  return 0;
-}
-
 #include <stddef.h>
 
 int __write(int handle, const unsigned char *buffer, size_t size)
@@ -15,7 +9,7 @@ int __write(int handle, const unsigned char *buffer, size_t size)
     {
         if (buffer[i] == '\n')
         {
-            USART_Send_Byte(&usart2, '\r'); // optional CRLF support
+            USART_Send_Byte(&usart2, '\r');
         }
         USART_Send_Byte(&usart2, buffer[i]);
     }
