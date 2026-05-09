@@ -1,0 +1,15 @@
+# IAR EWARM .gitignore template
+# Compiled Object files
+**/Obj/
+**/List/
+**/Exe/
+**/Debug/
+**/settings/
+
+*.dep
+*.ewt
+
+*.bak
+*.old
+
+*.wsdt
