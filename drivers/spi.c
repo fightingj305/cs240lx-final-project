@@ -1,5 +1,6 @@
 #include "spi.h"
 #include "rcc.h"
+#include "utils.h"
 
 void SPI_Init(SPI *spi) {
     switch ((uint32_t)spi->periph) {
@@ -45,8 +46,8 @@ void SPI_Init(SPI *spi) {
                         (spi->mode << SPI_CR1_MSTR_BIT) | 
                         (spi->cpol << SPI_CR1_CPOL_BIT) | 
                         (spi->cpha << SPI_CR1_CPHA_BIT) |
-                        SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_SPE;
-
+                        SPI_CR1_SSM | SPI_CR1_SSI;
+    spi->periph->CR1 |= SPI_CR1_SPE;
     Pin_Config(spi->cs, PIN_MODE_OUTPUT, PIN_OT_PUSH_PULL, PIN_SPEED_HIGH, PIN_PULL_NONE);
     SPI_Reset_CS(spi); // deselect the slave by default
 }

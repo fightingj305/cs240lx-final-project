@@ -1,5 +1,6 @@
 #include "usart.h"
 #include "rcc.h"
+#include "utils.h"
 
 void USART_Init(USART *usart) {
     switch ((uint32_t)usart->periph) {

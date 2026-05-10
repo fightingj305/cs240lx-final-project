@@ -25,6 +25,18 @@ typedef enum {
     USART_BAUD_RATE_115200
 } USART_Baud_Rate;
 
+typedef struct {
+    USART_Regs *periph;
+    Pin *tx;
+    Pin *rx;
+    USART_Baud_Rate baud_rate;
+} USART;
+
+void USART_Init(USART *usart);
+void USART_Send_Byte(USART *usart, uint8_t byte);
+uint8_t USART_Receive_Byte(USART *usart);
+void USART_Write(USART *usart, const uint8_t *data, uint32_t length);
+void USART_Read(USART *usart, uint8_t *data, uint32_t length);
 
 // Status Register (USART_SR)
 enum USART_SR_Bits {
@@ -112,16 +124,3 @@ enum USART_GTPR_Bits {
     USART_GTPR_PSC_MASK = (0xFF << 0),  // Prescaler value
     USART_GTPR_GT_MASK  = (0xFF << 8)   // Guard time value
 };
-
-typedef struct {
-    USART_Regs *periph;
-    Pin *tx;
-    Pin *rx;
-    USART_Baud_Rate baud_rate;
-} USART;
-
-void USART_Init(USART *usart);
-void USART_Send_Byte(USART *usart, uint8_t byte);
-uint8_t USART_Receive_Byte(USART *usart);
-void USART_Write(USART *usart, const uint8_t *data, uint32_t length);
-void USART_Read(USART *usart, uint8_t *data, uint32_t length);

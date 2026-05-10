@@ -105,7 +105,3 @@ enum FLASH_Keys {
 
 // Helper macros for sector selection
 #define FLASH_CR_SNB(sector) (((sector) << FLASH_CR_SNB_BIT) & FLASH_CR_SNB_MASK)
-
-void FLASH_SetLatency(uint32_t latency);
-void FLASH_Unlock(void);
-void FLASH_Lock(void);

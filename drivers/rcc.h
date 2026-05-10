@@ -29,6 +29,8 @@ typedef struct {
     // ignore the rest of the registers for now
 } RCC_Regs;
 
+void RCC_Init(void);
+
 // AHB1 peripheral clock enable register (RCC_AHB1ENR)
 enum RCC_AHB1_ENR_Bits {
     RCC_AHB1ENR_GPIOA_EN = (1 << 0),
@@ -234,5 +236,3 @@ enum RCC_APB2_RSTR_Bits {
     RCC_APB2RSTR_TIM10_RST  = (1 << 17),
     RCC_APB2RSTR_TIM11_RST  = (1 << 18)
 };
-
-void RCC_Init(void);

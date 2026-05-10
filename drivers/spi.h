@@ -19,6 +19,59 @@ typedef struct {
     volatile uint32_t TXCRCR;
 } SPI_Regs;
 
+typedef enum {
+    SPI_MODE_SLAVE = 0x00,
+    SPI_MODE_MASTER = 0x01
+} SPI_Mode;
+
+typedef enum {
+    SPI_CPOL_LOW = 0x00, // idle state
+    SPI_CPOL_HIGH = 0x01
+} SPI_CPOL;
+
+typedef enum {
+    SPI_CPHA_0 = 0x00, // data sampled on leading edge
+    SPI_CPHA_1 = 0x01 // data sampled on trailing edge
+} SPI_CPHA;
+
+typedef enum { // apb2 clock is 84mhz, apb1 clock is 42mhz
+    SPI_DIV_2 = 0x00,
+    SPI_DIV_4 = 0x01,
+    SPI_DIV_8 = 0x02,
+    SPI_DIV_16 = 0x03,
+    SPI_DIV_32 = 0x04,
+    SPI_DIV_64 = 0x05,
+    SPI_DIV_128 = 0x06,
+    SPI_DIV_256 = 0x07
+} SPI_Divider;
+
+typedef struct {
+    SPI_Regs *periph;
+    Pin *sck;
+    Pin *miso;
+    Pin *mosi;
+    Pin *cs;
+
+    SPI_Divider divider;
+    SPI_Mode mode;
+    SPI_CPOL cpol;
+    SPI_CPHA cpha;
+    bool little_endian;
+} SPI;
+
+void SPI_Init(SPI *spi);
+
+static inline void SPI_Reset_CS(SPI *spi) {
+    Pin_Set(spi->cs, true);
+}
+static inline void SPI_Set_CS(SPI *spi) {
+    Pin_Set(spi->cs, false);
+}
+
+void SPI_Transfer(SPI *spi, uint8_t *tx, uint8_t *rx, uint32_t length);
+void SPI_Read(SPI *spi, uint8_t *data, uint32_t length);
+void SPI_Write(SPI *spi, const uint8_t *data, uint32_t length);
+
 enum SPI_CR1_Bits {
     SPI_CR1_CPHA_BIT    = 0,   // Clock phase
     SPI_CR1_CPOL_BIT    = 1,   // Clock polarity
@@ -64,56 +117,3 @@ enum SPI_SR_Bits {
     SPI_SR_FRE          = (1 << 8)    // Frame format error (TI mode)
 };
 
-
-typedef enum {
-    SPI_MODE_MASTER = 0x00,
-    SPI_MODE_SLAVE = 0x01
-} SPI_Mode;
-
-typedef enum {
-    SPI_CPOL_LOW = 0x00, // idle state
-    SPI_CPOL_HIGH = 0x01
-} SPI_CPOL;
-
-typedef enum {
-    SPI_CPHA_0 = 0x00, // data sampled on leading edge
-    SPI_CPHA_1 = 0x01 // data sampled on trailing edge
-} SPI_CPHA;
-
-typedef enum { // apb2 clock is 84mhz, apb1 clock is 42mhz
-    SPI_DIV_2 = 0x00,
-    SPI_DIV_4 = 0x01,
-    SPI_DIV_8 = 0x02,
-    SPI_DIV_16 = 0x03,
-    SPI_DIV_32 = 0x04,
-    SPI_DIV_64 = 0x05,
-    SPI_DIV_128 = 0x06,
-    SPI_DIV_256 = 0x07
-} SPI_Divider;
-
-typedef struct {
-    SPI_Regs *periph;
-    Pin *sck;
-    Pin *miso;
-    Pin *mosi;
-    Pin *cs;
-
-    SPI_Divider divider;
-    SPI_Mode mode;
-    SPI_CPOL cpol;
-    SPI_CPHA cpha;
-    bool little_endian;
-} SPI;
-
-void SPI_Init(SPI *spi);
-
-inline void SPI_Reset_CS(SPI *spi) {
-    Pin_Set(spi->cs, true);
-}
-inline void SPI_Set_CS(SPI *spi) {
-    Pin_Set(spi->cs, false);
-}
-
-void SPI_Transfer(SPI *spi, uint8_t *tx, uint8_t *rx, uint32_t length);
-void SPI_Read(SPI *spi, uint8_t *data, uint32_t length);
-void SPI_Write(SPI *spi, const uint8_t *data, uint32_t length);

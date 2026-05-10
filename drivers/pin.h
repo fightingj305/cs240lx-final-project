@@ -74,15 +74,15 @@ typedef struct {
 void Pin_Config(const Pin *pin, Pin_Mode mode, Pin_OutputType ot, Pin_Speed speed, Pin_Pull pull);
 void Pin_Config_AF(const Pin *pin, Pin_AF af, Pin_OutputType ot, Pin_Speed speed, Pin_Pull pull);
 
-inline void Pin_Set_High(const Pin *pin) {
+static inline void Pin_Set_High(const Pin *pin) {
     pin->port->BSRR = 1 << pin->pin_num;
 }
-inline void Pin_Set_Low(const Pin *pin) {
+static inline void Pin_Set_Low(const Pin *pin) {
     pin->port->BSRR = 1 << (pin->pin_num + 16);
 }
-inline void Pin_Set(const Pin *pin, bool value) {
+static inline void Pin_Set(const Pin *pin, bool value) {
     value ? Pin_Set_High(pin) : Pin_Set_Low(pin);
 }
-inline bool Pin_Read(const Pin *pin) {
+static inline bool Pin_Read(const Pin *pin) {
     return (pin->port->IDR >> pin->pin_num) & 1;
 }

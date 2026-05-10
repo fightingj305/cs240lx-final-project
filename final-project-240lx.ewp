@@ -349,7 +349,7 @@
                 </option>
                 <option>
                     <name>CCIncludePath2</name>
-                    <state></state>
+                    <state>C:\Users\Owner\Desktop\Desktop Files\stanford\junior year\quarter 3\CS 240LX\final-project-240lx\drivers</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -2122,6 +2122,9 @@
     <group>
         <name>drivers</name>
         <file>
+            <name>$PROJ_DIR$\drivers\flash.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\drivers\memmap.h</name>
         </file>
         <file>
@@ -2146,6 +2149,24 @@
             <name>$PROJ_DIR$\drivers\spi.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\drivers\systick.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\drivers\systick.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\drivers\timer.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\drivers\timer.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\drivers\usart.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\drivers\usart.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\drivers\utils.c</name>
         </file>
         <file>
@@ -2159,10 +2180,19 @@
         </file>
     </group>
     <file>
-        <name>$PROJ_DIR$\drivers\init.c</name>
+        <name>$PROJ_DIR$\hardware.c</name>
+    </file>
+    <file>
+        <name>$PROJ_DIR$\hardware.h</name>
+    </file>
+    <file>
+        <name>$PROJ_DIR$\init.c</name>
     </file>
     <file>
         <name>$PROJ_DIR$\main.c</name>
+    </file>
+    <file>
+        <name>$PROJ_DIR$\retarget.c</name>
     </file>
     <file>
         <name>$PROJ_DIR$\start.S</name>
