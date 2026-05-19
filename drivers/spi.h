@@ -45,6 +45,7 @@ typedef enum { // apb2 clock is 84mhz, apb1 clock is 42mhz
     SPI_DIV_256 = 0x07
 } SPI_Divider;
 
+// This spi scheme follows the old SSCP convention of each peripheral owning exactly one slave
 typedef struct {
     SPI_Regs *periph;
     Pin *sck;
@@ -71,6 +72,22 @@ static inline void SPI_Set_CS(SPI *spi) {
 void SPI_Transfer(SPI *spi, uint8_t *tx, uint8_t *rx, uint32_t length);
 void SPI_Read(SPI *spi, uint8_t *data, uint32_t length);
 void SPI_Write(SPI *spi, const uint8_t *data, uint32_t length);
+
+static inline uint8_t SPI_Transfer_Byte(SPI *spi, uint8_t data) {
+    uint8_t output;
+    SPI_Transfer(spi, &data, &output, 1);
+    return output;
+}
+
+static inline uint8_t SPI_Read_Byte(SPI *spi) {
+    uint8_t output;
+    SPI_Read(spi, &output, 1);
+    return output;
+}
+
+static inline void SPI_Write_Byte(SPI *spi, uint8_t data) {
+    SPI_Write(spi, &data, 1);
+}
 
 enum SPI_CR1_Bits {
     SPI_CR1_CPHA_BIT    = 0,   // Clock phase

@@ -2,12 +2,11 @@
 #include "rcc.h"
 #include "utils.h"
 
-#define TIM1_ARR 1000
 
 void TIM1_Init(uint32_t frequency) {
     RCC->APB2ENR |= RCC_APB2ENR_TIM1_EN;
 
-    TIM1->PSC = (APB2_CLK / frequency) - 1;
+    TIM1->PSC = (APB2_CLK / ((TIM1_ARR) * frequency)) - 1;
     TIM1->ARR = TIM1_ARR - 1; 
     TIM1->CR1 = TIM_CR1_ARPE;
     TIM1->EGR = TIM_EGR_UG;
@@ -62,9 +61,9 @@ void TIM1_Config_PWM(TIM_Channel channel, Pin *pin) {
     Pin_Config_AF(pin, PIN_AF1, PIN_OT_PUSH_PULL, PIN_SPEED_LOW, PIN_PULL_NONE);
 }
 
-void TIM1_Set_Duty_Cycle(TIM_Channel channel, uint8_t duty_cycle) {
-    ASSERT(duty_cycle <= 100);
-    uint32_t ccr_value = (TIM1_ARR / 100) * duty_cycle;
+void TIM1_Set_Duty_Cycle(TIM_Channel channel, uint16_t duty_cycle) {
+    ASSERT(duty_cycle <= TIM1_ARR);
+    uint32_t ccr_value = duty_cycle;
     switch (channel) {
         case TIM_CHANNEL_1:
             TIM1->CCR1 = ccr_value;

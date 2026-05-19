@@ -23,13 +23,9 @@ void SPI_Init(SPI *spi) {
             RCC->APB1ENR |= RCC_APB1ENR_SPI3_EN;
             break;
         case (uint32_t)SPI4:
-            Pin_AF af = PIN_AF6;
-            if (spi->miso->port == GPIOE) {
-                af = PIN_AF5;
-            }
-            Pin_Config_AF(spi->sck, af, PIN_OT_PUSH_PULL, PIN_SPEED_HIGH, PIN_PULL_NONE);
-            Pin_Config_AF(spi->miso, af, PIN_OT_PUSH_PULL, PIN_SPEED_HIGH, PIN_PULL_NONE);
-            Pin_Config_AF(spi->mosi, af, PIN_OT_PUSH_PULL, PIN_SPEED_HIGH, PIN_PULL_NONE);
+            Pin_Config_AF(spi->sck, spi->miso->port == GPIOE ? PIN_AF5 : PIN_AF6, PIN_OT_PUSH_PULL, PIN_SPEED_HIGH, PIN_PULL_NONE);
+            Pin_Config_AF(spi->miso, spi->miso->port == GPIOE ? PIN_AF5 : PIN_AF6, PIN_OT_PUSH_PULL, PIN_SPEED_HIGH, PIN_PULL_NONE);
+            Pin_Config_AF(spi->mosi, spi->miso->port == GPIOE ? PIN_AF5 : PIN_AF6, PIN_OT_PUSH_PULL, PIN_SPEED_HIGH, PIN_PULL_NONE);
             RCC->APB2ENR |= RCC_APB2ENR_SPI4_EN;
             break;
         case (uint32_t)SPI5:
@@ -62,6 +58,7 @@ void SPI_Transfer(SPI *spi, uint8_t *tx, uint8_t *rx, uint32_t length) {
         while (!(spi->periph->SR & SPI_SR_RXNE));
         rx[i] = spi->periph->DR;
     }
+    while (spi->periph->SR & SPI_SR_BSY);
     SPI_Reset_CS(spi);
 }
 
@@ -74,6 +71,7 @@ void SPI_Read(SPI *spi, uint8_t *data, uint32_t length) {
         while (!(spi->periph->SR & SPI_SR_RXNE));
         data[i] = spi->periph->DR;
     }
+    while (spi->periph->SR & SPI_SR_BSY);
     SPI_Reset_CS(spi);
 }
 
@@ -86,5 +84,6 @@ void SPI_Write(SPI *spi, const uint8_t *data, uint32_t length) {
         while (!(spi->periph->SR & SPI_SR_RXNE));
         volatile uint8_t dummy = spi->periph->DR;
     }
+    while (spi->periph->SR & SPI_SR_BSY);
     SPI_Reset_CS(spi);
 }

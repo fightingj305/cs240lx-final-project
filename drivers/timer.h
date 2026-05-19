@@ -4,6 +4,9 @@
 
 #define TIM1 ((TIM_Regs *)0x40010000U)
 
+#define TIM1_ARR 4200
+
+
 typedef struct {
     volatile uint32_t CR1;     // Control register 1
     volatile uint32_t CR2;     // Control register 2
@@ -39,7 +42,10 @@ void TIM1_Init(uint32_t frequency);
 void TIM1_Start();
 void TIM1_Stop();
 void TIM1_Config_PWM(TIM_Channel channel, Pin *pin);
-void TIM1_Set_Duty_Cycle(TIM_Channel channel, uint8_t duty_cycle);
+void TIM1_Set_Duty_Cycle(TIM_Channel channel, uint16_t duty_cycle);
+static inline uint16_t TIM1_Get_Max_Duty() {
+    return TIM1_ARR - 1;
+}
 
 // Control Register 1 (TIM_CR1)
 enum TIM_CR1_Bits {

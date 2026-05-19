@@ -350,6 +350,8 @@
                 <option>
                     <name>CCIncludePath2</name>
                     <state>C:\Users\Owner\Desktop\Desktop Files\stanford\junior year\quarter 3\CS 240LX\final-project-240lx\drivers</state>
+                    <state>C:\Users\Owner\Desktop\Desktop Files\stanford\junior year\quarter 3\CS 240LX\final-project-240lx\drivers\devices</state>
+                    <state>C:\Users\Owner\Desktop\Desktop Files\stanford\junior year\quarter 3\CS 240LX\final-project-240lx\application</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -2120,9 +2122,36 @@
         </settings>
     </configuration>
     <group>
+        <name>application</name>
+        <file>
+            <name>$PROJ_DIR$\application\pid.h</name>
+        </file>
+    </group>
+    <group>
         <name>drivers</name>
+        <group>
+            <name>devices</name>
+            <file>
+                <name>$PROJ_DIR$\drivers\devices\lsm6ds3.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\drivers\devices\lsm6ds3.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\drivers\devices\nrf24l01p.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\drivers\devices\nrf24l01p.h</name>
+            </file>
+        </group>
         <file>
             <name>$PROJ_DIR$\drivers\flash.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\drivers\i2c.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\drivers\i2c.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\drivers\memmap.h</name>

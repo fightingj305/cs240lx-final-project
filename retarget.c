@@ -1,4 +1,6 @@
 #include "hardware.h"
+#ifdef UART_REDIRECT
+
 #include <stddef.h>
 
 int __write(int handle, const unsigned char *buffer, size_t size)
@@ -16,3 +18,5 @@ int __write(int handle, const unsigned char *buffer, size_t size)
 
     return size;
 }
+
+#endif
