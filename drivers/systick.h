@@ -11,6 +11,8 @@ void SysTick_Delay_Microseconds(uint32_t microseconds);
 void SysTick_Delay_Milliseconds(uint32_t milliseconds);
 uint32_t SysTick_Get_Microseconds();
 
+extern uint64_t elapsed_micros;
+
 typedef struct {
     volatile uint32_t CTRL;
     volatile uint32_t LOAD;

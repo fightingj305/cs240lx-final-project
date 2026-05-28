@@ -116,20 +116,22 @@ typedef struct NRF24L01_t {
 } NRF24L01;
 
 void NRF_Config(NRF24L01 *nrf);
-
+void NRF_Config_RX_IRQ(NRF24L01 *nrf);
 void NRF_Setup_Pipe(NRF24L01 *nrf, NRF_Pipe pipe, uint8_t *address);
 
-void NRF_Send(NRF24L01 *nrf, uint8_t *data);
+bool NRF_Send(NRF24L01 *nrf, uint8_t *data);
 void NRF_Receive(NRF24L01 *nrf);
+void NRF_Receive_Nonblocking(NRF24L01 *nrf);
 void NRF_Read_Pipe(NRF24L01 *nrf, NRF_Pipe pipe, uint8_t *data);
 void NRF_Set_TX_Mode(NRF24L01 *nrf);
 void NRF_Set_RX_Mode(NRF24L01 *nrf);
 
 uint8_t NRF_Get_Status(NRF24L01 *nrf);
+bool NRF_Check_RT(NRF24L01 *nrf);
+void NRF_Clear_IRQ(NRF24L01 *nrf);
 
 void NRF_Flush_TX(NRF24L01 *nrf);
 void NRF_Flush_RX(NRF24L01 *nrf);
-
 
 void NRF_FIFO_Write_Packet(NRF24L01 *nrf, uint8_t *data);
 

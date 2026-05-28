@@ -1,4 +1,5 @@
 #include "hardware.h"
+#ifdef DRONE_CODE
 
 Pin test_pin = {
     .port = GPIOA,
@@ -120,11 +121,40 @@ SPI spi5 = {
     .cs = &spi5_cs,
     .divider = SPI_DIV_16,
     .mode = SPI_MODE_MASTER,
-    .cpol = SPI_CPOL_HIGH,
-    .cpha = SPI_CPHA_1,
+    .cpol = SPI_CPOL_LOW,
+    .cpha = SPI_CPHA_0,
     .little_endian = false
+};
+
+Pin led_pin = {
+    .port = GPIOC,
+    .pin_num = 13
 };
 
 LSM6DS3 lsm6ds3 = {
     .spi = &spi2
 };
+
+Pin nrf_ce_pin = {
+    .port = GPIOA,
+    .pin_num = 7
+};
+
+Pin nrf_irq_pin = {
+    .port = GPIOB,
+    .pin_num = 2
+};
+
+NRF24L01 nrf24l01 = {
+    .device = &spi5,
+    .ce_pin = &nrf_ce_pin,
+    .irq_pin = &nrf_irq_pin,
+    .channel = 76,
+    .ack = true,
+    .nbytes = 10,
+    .address_width = NRF_ADDRESS_3_BYTE,
+    .power = NRF_PWR_18DBM,
+    .datarate = NRF_DR_2MBPS,
+    .tx_addr = {0xE7, 0xE7, 0xE7, 0, 0},
+};
+#endif

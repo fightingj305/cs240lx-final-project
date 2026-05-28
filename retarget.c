@@ -1,5 +1,17 @@
+#include "config.h"
+
+#ifdef DRONE_CODE
 #include "hardware.h"
-#ifdef UART_REDIRECT
+#else 
+#include "controller-hardware.h"
+#endif
+#ifdef NO_DEBUGGER
+
+    int putchar(int c) {
+        (void)c;
+        return c;
+    }
+#elif defined(UART_REDIRECT)
 
 #include <stddef.h>
 

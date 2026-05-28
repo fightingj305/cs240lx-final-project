@@ -6,7 +6,7 @@
 void TIM1_Init(uint32_t frequency) {
     RCC->APB2ENR |= RCC_APB2ENR_TIM1_EN;
 
-    TIM1->PSC = (APB2_CLK / ((TIM1_ARR) * frequency)) - 1;
+    TIM1->PSC = (APB2_CLK / frequency) - 1;
     TIM1->ARR = TIM1_ARR - 1; 
     TIM1->CR1 = TIM_CR1_ARPE;
     TIM1->EGR = TIM_EGR_UG;

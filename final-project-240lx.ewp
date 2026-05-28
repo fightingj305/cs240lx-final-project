@@ -2145,6 +2145,18 @@
             </file>
         </group>
         <file>
+            <name>$PROJ_DIR$\drivers\adc.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\drivers\adc.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\drivers\exti.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\drivers\exti.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\drivers\flash.h</name>
         </file>
         <file>
@@ -2155,6 +2167,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\drivers\memmap.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\drivers\nvic.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\drivers\pin.c</name>
@@ -2176,6 +2191,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\drivers\spi.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\drivers\syscfg.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\drivers\systick.c</name>
@@ -2208,6 +2226,15 @@
             <name>$PROJ_DIR$\linker\stm32f411xx.icf</name>
         </file>
     </group>
+    <file>
+        <name>$PROJ_DIR$\config.h</name>
+    </file>
+    <file>
+        <name>$PROJ_DIR$\controller-hardware.c</name>
+    </file>
+    <file>
+        <name>$PROJ_DIR$\controller-hardware.h</name>
+    </file>
     <file>
         <name>$PROJ_DIR$\hardware.c</name>
     </file>

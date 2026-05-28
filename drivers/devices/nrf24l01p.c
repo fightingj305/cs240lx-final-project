@@ -1,5 +1,6 @@
 #include "nrf24l01p.h"
 #include "utils.h"
+#include "exti.h"
 #include "systick.h"
 
 void NRF_Config(NRF24L01 *nrf) {
@@ -19,11 +20,19 @@ void NRF_Config(NRF24L01 *nrf) {
 
     if (nrf->ack) {
         NRF_Setup_Pipe(nrf, NRF_PIPE0, nrf->tx_addr);
-        NRF_Write_Reg(nrf, NRF_SETUP_RETR, 0x3F);
+        NRF_Write_Reg(nrf, NRF_SETUP_RETR, 0x0F);
     } else {
         NRF_Write_Reg(nrf, NRF_EN_AA, 0x00);
         NRF_Write_Reg(nrf, NRF_SETUP_RETR, 0x00);
     }
+}
+
+void NRF_Config_RX_IRQ(NRF24L01 *nrf){
+    Pin_Config(nrf->irq_pin, PIN_MODE_INPUT, PIN_OT_PUSH_PULL, PIN_SPEED_LOW, PIN_PULL_UP);
+    EXTI_Config(nrf->irq_pin, EXTI_TRIGGER_FALLING);
+    uint8_t current_config = NRF_Read_Reg(nrf, NRF_CONFIG);
+    NRF_Write_Reg(nrf, NRF_CONFIG, current_config | (1 << NRF_CONFIG_MASK_TX_DS_BIT) | (1 << NRF_CONFIG_MASK_MAX_RT_BIT));
+    NRF_Clear_IRQ(nrf);
 }
 
 void NRF_Setup_Pipe(NRF24L01 *nrf, NRF_Pipe pipe, uint8_t *address) {
@@ -61,14 +70,15 @@ void NRF_FIFO_Read_Packet(NRF24L01 *nrf, uint8_t *data) {
     SysTick_Delay_Microseconds(5);
 }
 
-void NRF_Send(NRF24L01 *nrf, uint8_t *data) {
+bool NRF_Send(NRF24L01 *nrf, uint8_t *data) {
+    bool success = true;
     NRF_FIFO_Write_Packet(nrf, data);
 
     NRF_Set_TX_Mode(nrf);
     Pin_Set_High(nrf->ce_pin);
     SysTick_Delay_Microseconds(150);
 
-    uint8_t status;
+    volatile uint8_t status;
     while (1) {
         status = NRF_Get_Status(nrf);
         if (status & (1 << NRF_STATUS_TX_DS_BIT)) break;
@@ -76,11 +86,13 @@ void NRF_Send(NRF24L01 *nrf, uint8_t *data) {
             printf("MAX_RT hit!\n");
             NRF_Write_Reg(nrf, NRF_STATUS, 1 << NRF_STATUS_MAX_RT_BIT);
             NRF_Flush_TX(nrf);
+            success = false;
             break;
         }
     }
     NRF_Write_Reg(nrf, NRF_STATUS, 1 << NRF_STATUS_TX_DS_BIT);
     Pin_Set_Low(nrf->ce_pin);
+    return success;
 }
 
 void NRF_Receive(NRF24L01 *nrf) {
@@ -99,6 +111,19 @@ void NRF_Receive(NRF24L01 *nrf) {
     }
     Pin_Set_Low(nrf->ce_pin);
     SysTick_Delay_Microseconds(150);
+}
+
+void NRF_Receive_Nonblocking(NRF24L01 *nrf) {
+    uint8_t fifo_status = NRF_Read_Reg(nrf, NRF_FIFO_STATUS);
+    uint8_t count = 0;
+    while (!(fifo_status & 0x01)) {
+        uint8_t status = NRF_Get_Status(nrf);
+        NRF_Pipe pipe = (NRF_Pipe)((status >> NRF_STATUS_RX_P_NO_BIT) & 0x07);
+        if (pipe < NRF_NUM_PIPES) {
+            NRF_FIFO_Read_Packet(nrf, nrf->rx_data[pipe]);
+        }
+        fifo_status = NRF_Read_Reg(nrf, NRF_FIFO_STATUS);
+    }
 }
 
 void NRF_Set_TX_Mode(NRF24L01 *nrf) {
@@ -125,6 +150,20 @@ uint8_t NRF_Get_Status(NRF24L01 *nrf) {
     return SPI_Transfer_Byte(nrf->device, NRF_NOP);
 }
 
+bool NRF_Check_RT(NRF24L01 *nrf) {
+    uint8_t status = NRF_Get_Status(nrf);
+    return (status >> NRF_STATUS_MAX_RT_BIT) & 1;
+}
+
+void NRF_Clear_IRQ(NRF24L01 *nrf) {
+    NRF_Write_Reg(nrf,
+        NRF_STATUS,
+        (1 << NRF_STATUS_RX_DR_BIT) |
+        (1 << NRF_STATUS_TX_DS_BIT) |
+        (1 << NRF_STATUS_MAX_RT_BIT));
+    SysTick_Delay_Microseconds(10);
+    EXTI_Clear_Pending(nrf->irq_pin);
+}
 
 void NRF_Flush_TX(NRF24L01 *nrf) {
     SPI_Write_Byte(nrf->device, NRF_FLUSH_TX);

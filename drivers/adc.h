@@ -3,6 +3,7 @@
 
 
 #include <stdint.h>
+#include "pin.h"
 
 #define ADC1 ((ADC_Regs *)0x40012000U)
 #define ADC_COMMON ((ADC_Common_Regs *)0x40012300U)
@@ -31,6 +32,7 @@ typedef struct {
 } ADC_Regs;
 
 typedef enum {
+    ADC1_CH0,
     ADC1_CH1,
     ADC1_CH2,
     ADC1_CH3,
@@ -42,15 +44,19 @@ typedef enum {
     ADC1_CH9
 } ADC_Channel;
 
+typedef struct 
+{
+    Pin *pin;
+    ADC_Channel channel;
+} ADC_Pin;
+
 
 void ADC_Init();
-void ADC_Config_Channel(ADC_Channel channel);
-uint16_t ADC_Read_Channel(ADC_Channel channel); // blocking single conversion
-
+void ADC_Config_Pin(ADC_Pin *adc_pin);
+uint16_t ADC_Read_Pin(ADC_Pin *adc_pin); // blocking single conversion
 typedef struct {
-    volatile uint32_t CSR;     // Common status register
+    volatile uint32_t reserved; 
     volatile uint32_t CCR;     // Common control register
-    volatile uint32_t CDR;     // Common regular data register (dual/triple mode)
 } ADC_Common_Regs;
 
 // Status Register (ADC_SR)

@@ -2,10 +2,10 @@
 #include <stdint.h>
 #include "pin.h"
 
+// just for tim1, so some application-specific stuff in the config
+
 #define TIM1 ((TIM_Regs *)0x40010000U)
-
-#define TIM1_ARR 4200
-
+#define TIM1_ARR 2500
 
 typedef struct {
     volatile uint32_t CR1;     // Control register 1
