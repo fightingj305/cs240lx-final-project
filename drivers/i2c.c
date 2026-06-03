@@ -93,3 +93,61 @@ void I2C_Read(I2C *i2c, uint8_t address, uint8_t *data, uint32_t length) {
     }
     while (i2c->periph->SR2 & I2C_SR2_MSL);
 }
+
+void I2C_WriteRead(I2C *i2c, uint8_t address, 
+                   const uint8_t *tx, uint32_t tx_len,
+                   uint8_t *rx, uint32_t rx_len) {
+    i2c->periph->CR1 |= I2C_CR1_START;
+    while (!(i2c->periph->SR1 & I2C_SR1_SB));
+    i2c->periph->DR = address << 1 | I2C_WRITE_BIT;
+    while (!(i2c->periph->SR1 & I2C_SR1_ADDR));
+    (void)i2c->periph->SR1;
+    (void)i2c->periph->SR2;
+    for (uint32_t i = 0; i < tx_len; i++) {
+        while (!(i2c->periph->SR1 & I2C_SR1_TXE));
+        i2c->periph->DR = tx[i];
+    }
+    while (!(i2c->periph->SR1 & I2C_SR1_BTF));
+
+    i2c->periph->CR1 |= I2C_CR1_START;
+    while (!(i2c->periph->SR1 & I2C_SR1_SB));
+    i2c->periph->DR = address << 1 | I2C_READ_BIT;
+
+    if (rx_len <= 2) {
+        i2c->periph->CR1 &= ~I2C_CR1_ACK;
+        if (rx_len == 2) {
+            i2c->periph->CR1 |= I2C_CR1_POS;
+        }
+    } else {
+        i2c->periph->CR1 |= I2C_CR1_ACK;
+    }
+
+    while (!(i2c->periph->SR1 & I2C_SR1_ADDR));
+    (void)i2c->periph->SR1;
+    (void)i2c->periph->SR2;
+
+    if (rx_len == 1) {
+        i2c->periph->CR1 |= I2C_CR1_STOP;
+        while (!(i2c->periph->SR1 & I2C_SR1_RXNE));
+        rx[0] = i2c->periph->DR;
+    } else if (rx_len == 2) {
+        while (!(i2c->periph->SR1 & I2C_SR1_BTF));
+        i2c->periph->CR1 |= I2C_CR1_STOP;
+        rx[0] = i2c->periph->DR;
+        rx[1] = i2c->periph->DR;
+        i2c->periph->CR1 &= ~I2C_CR1_POS;
+    } else {
+        for (uint32_t i = 0; i < rx_len; i++) {
+            if (i == rx_len - 3) {
+                while (!(i2c->periph->SR1 & I2C_SR1_BTF));
+                i2c->periph->CR1 &= ~I2C_CR1_ACK;
+            } else if (i == rx_len - 2) {
+                while (!(i2c->periph->SR1 & I2C_SR1_BTF));
+                i2c->periph->CR1 |= I2C_CR1_STOP;
+            }
+            while (!(i2c->periph->SR1 & I2C_SR1_RXNE));
+            rx[i] = i2c->periph->DR;
+        }
+    }
+    while (i2c->periph->SR2 & I2C_SR2_MSL);
+}

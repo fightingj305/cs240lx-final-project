@@ -115,7 +115,6 @@ void NRF_Receive(NRF24L01 *nrf) {
 
 void NRF_Receive_Nonblocking(NRF24L01 *nrf) {
     uint8_t fifo_status = NRF_Read_Reg(nrf, NRF_FIFO_STATUS);
-    uint8_t count = 0;
     while (!(fifo_status & 0x01)) {
         uint8_t status = NRF_Get_Status(nrf);
         NRF_Pipe pipe = (NRF_Pipe)((status >> NRF_STATUS_RX_P_NO_BIT) & 0x07);

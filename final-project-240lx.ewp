@@ -352,6 +352,8 @@
                     <state>C:\Users\Owner\Desktop\Desktop Files\stanford\junior year\quarter 3\CS 240LX\final-project-240lx\drivers</state>
                     <state>C:\Users\Owner\Desktop\Desktop Files\stanford\junior year\quarter 3\CS 240LX\final-project-240lx\drivers\devices</state>
                     <state>C:\Users\Owner\Desktop\Desktop Files\stanford\junior year\quarter 3\CS 240LX\final-project-240lx\application</state>
+                    <state>C:\Users\Owner\Desktop\Desktop Files\stanford\junior year\quarter 3\CS 240LX\final-project-240lx\drivers\devices\STSW-IMG009\STSW-IMG009_v3.5.5\API\core</state>
+                    <state>C:\Users\Owner\Desktop\Desktop Files\stanford\junior year\quarter 3\CS 240LX\final-project-240lx\drivers\devices\STSW-IMG009\STSW-IMG009_v3.5.5\API\platform</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -2124,6 +2126,12 @@
     <group>
         <name>application</name>
         <file>
+            <name>$PROJ_DIR$\application\drone_constants.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\application\esc.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\application\pid.h</name>
         </file>
     </group>
@@ -2131,6 +2139,30 @@
         <name>drivers</name>
         <group>
             <name>devices</name>
+            <group>
+                <name>vl53l1</name>
+                <file>
+                    <name>$PROJ_DIR$\drivers\devices\STSW-IMG009\STSW-IMG009_v3.5.5\API\platform\vl53l1_platform.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\drivers\devices\STSW-IMG009\STSW-IMG009_v3.5.5\API\platform\vl53l1_platform.h</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\drivers\devices\STSW-IMG009\STSW-IMG009_v3.5.5\API\platform\vl53l1_types.h</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\drivers\devices\STSW-IMG009\STSW-IMG009_v3.5.5\API\core\VL53L1X_api.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\drivers\devices\STSW-IMG009\STSW-IMG009_v3.5.5\API\core\VL53L1X_api.h</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\drivers\devices\STSW-IMG009\STSW-IMG009_v3.5.5\API\core\VL53L1X_calibration.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\drivers\devices\STSW-IMG009\STSW-IMG009_v3.5.5\API\core\VL53L1X_calibration.h</name>
+                </file>
+            </group>
             <file>
                 <name>$PROJ_DIR$\drivers\devices\lsm6ds3.c</name>
             </file>
@@ -2212,9 +2244,6 @@
         </file>
         <file>
             <name>$PROJ_DIR$\drivers\usart.h</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\drivers\utils.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\drivers\utils.h</name>

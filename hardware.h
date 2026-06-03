@@ -9,7 +9,9 @@
 #include "adc.h"
 #include "lsm6ds3.h"
 #include "nrf24l01p.h"
+#include "VL53L1X_api.h"
 
+#define VL53L1X_ADDR 0x52
 
 extern Pin test_pin;
 
@@ -45,5 +47,7 @@ extern LSM6DS3 lsm6ds3;
 extern Pin nrf_ce_pin;
 
 extern NRF24L01 nrf24l01;
+
+void Drone_Hardware_Init();
 
 #endif

@@ -40,4 +40,6 @@ extern Pin blue_pin;
 extern Pin nrf_ce_pin;
 extern NRF24L01 nrf24l01;
 
+void Controller_Hardware_Init();
+
 #endif

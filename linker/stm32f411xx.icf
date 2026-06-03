@@ -1,4 +1,4 @@
-/* STM32F411 memory layout */
+// pretty basic linker script
 
 define symbol __ICFEDIT_intvec_start__ = 0x08000000;
 

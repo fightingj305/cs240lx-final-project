@@ -17,5 +17,16 @@
         while(1); \
     } while(0)
 
-void interrupts_on(void);
-void interrupts_off(void);
+#define CLAMP(x, lo, hi)    ((x) < (lo) ? (lo) : (x) > (hi) ? (hi) : (x))
+
+#define MAX(a,b)             ((a) < (b) ? (b) : (a))
+#define MIN(a,b)             ((a) < (b) ? (a) : (b))
+      
+static inline void interrupts_on(void) {
+    __asm volatile("cpsid i" : : : "memory");
+}
+
+static inline void interrupts_off(void) {
+    __asm volatile("cpsie i" : : : "memory");
+}
+

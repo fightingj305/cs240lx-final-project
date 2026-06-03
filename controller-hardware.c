@@ -1,8 +1,7 @@
 #include "controller-hardware.h"
-
 #ifndef DRONE_CODE
-
-
+#include "systick.h"
+#include <stdio.h>
 Pin usart2_tx = {
     .port = GPIOA,
     .pin_num = 2
@@ -129,5 +128,35 @@ NRF24L01 nrf24l01 = {
     .datarate = NRF_DR_2MBPS,
     .tx_addr = {0xE7, 0xE7, 0xE7, 0, 0},
 };
+
+void Controller_Hardware_Init() {
+    SysTick_Init();
+    SysTick_Delay_Milliseconds(1000); // startup delay
+
+#ifdef UART_REDIRECT
+    USART_Init(&usart2);
+#endif
+    
+    NRF_Config(&nrf24l01);
+    uint8_t pipe1_addr[5] = {0xE7, 0xE7, 0xE7, 0x00, 0x00};
+    NRF_Setup_Pipe(&nrf24l01, NRF_PIPE1, pipe1_addr);
+    uint8_t rf_ch = NRF_Read_Reg(&nrf24l01, NRF_RF_CH);
+    printf("RF_CH: %02X\n", rf_ch);  // should be 0x4C
+    if (rf_ch != nrf24l01.channel) {
+        printf("NRF init failed, halting\n");
+        while (1);
+    }
+    
+    ADC_Init();
+    ADC_Config_Pin(&adc_x);
+    ADC_Config_Pin(&adc_y);
+    ADC_Config_Pin(&adc_z);
+    ADC_Config_Pin(&adc_yaw);
+    
+    Pin_Config(&start_pin, PIN_MODE_INPUT, PIN_OT_PUSH_PULL, PIN_SPEED_LOW, PIN_PULL_UP);
+    Pin_Config(&red_pin, PIN_MODE_OUTPUT, PIN_OT_PUSH_PULL, PIN_SPEED_LOW, PIN_PULL_NONE);
+    Pin_Config(&green_pin, PIN_MODE_OUTPUT, PIN_OT_PUSH_PULL, PIN_SPEED_LOW, PIN_PULL_NONE);
+    Pin_Config(&blue_pin, PIN_MODE_OUTPUT, PIN_OT_PUSH_PULL, PIN_SPEED_LOW, PIN_PULL_NONE);
+}
 
 #endif

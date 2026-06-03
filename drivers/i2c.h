@@ -37,6 +37,9 @@ typedef struct {
 void I2C_Init(I2C *i2c);
 void I2C_Write(I2C *i2c, uint8_t address, const uint8_t *data, uint32_t length);
 void I2C_Read(I2C *i2c, uint8_t address, uint8_t *data, uint32_t length);
+void I2C_WriteRead(I2C *i2c, uint8_t address, 
+                   const uint8_t *tx, uint32_t tx_len,
+                   uint8_t *rx, uint32_t rx_len);
 
 // Control Register 1 (I2C_CR1)
 enum I2C_CR1_Bits {

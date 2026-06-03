@@ -4,14 +4,15 @@
 
 #define SYSTICK ((SysTick_Regs *)0xE000E010U)
 
-#define SYSTICK_LOAD_VALUE (1 << 24) - 1 // 24-bit counter max value
+#define SYSTICK_LOAD_VALUE ((AHB_CLK / 1000) - 1)
 
 void SysTick_Init();
 void SysTick_Delay_Microseconds(uint32_t microseconds);
 void SysTick_Delay_Milliseconds(uint32_t milliseconds);
+uint32_t SysTick_Get_Milliseconds();
 uint32_t SysTick_Get_Microseconds();
 
-extern uint64_t elapsed_micros;
+extern volatile uint32_t systick_ms;
 
 typedef struct {
     volatile uint32_t CTRL;

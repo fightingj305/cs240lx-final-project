@@ -19,10 +19,10 @@ void ADC_Config_Pin(ADC_Pin *adc_pin) {
 }
 
 uint16_t ADC_Read_Pin(ADC_Pin *adc_pin) {
-    ASSERT(adc_pin->channel <= ADC1_CH9);
+    ASSERT(adc_pin->channel <= ADC1_CH9); 
     ADC1->SQR3 = ADC_SQR3_SQ(1, adc_pin->channel);
     ADC1->CR2 |= ADC_CR2_SWSTART;
-
+    // queue up that one channel  and block till it completes, i know, yuck
     while (!(ADC1->SR & ADC_SR_EOC));
     return (uint16_t)ADC1->DR;
 }

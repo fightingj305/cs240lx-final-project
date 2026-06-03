@@ -1,37 +1,34 @@
 #include "systick.h"
+#include "utils.h"
 
+volatile uint32_t systick_ms = 0;
 
 void SysTick_Init() {
         SYSTICK->CTRL = 0;
         SYSTICK->LOAD = SYSTICK_LOAD_VALUE;
         SYSTICK->VAL = 0;
-        SYSTICK->CTRL = SYSTICK_CTRL_CLKSOURCE_INTERNAL  | SYSTICK_CTRL_ENABLE;
+        SYSTICK->CTRL = SYSTICK_CTRL_CLKSOURCE_INTERNAL  | SYSTICK_CTRL_ENABLE | SYSTICK_CTRL_TICKINT;
 }
 
-uint32_t SysTick_Get_Microseconds(void) {
-    static uint32_t accumulated_us = 0;
-    static uint32_t remainder = 0;
-    static uint32_t last_val = 0;
-    
-    uint32_t ticks_per_us = AHB_CLK / 1000000;
-    uint32_t load = SYSTICK_LOAD_VALUE + 1;
-    uint32_t now = SYSTICK->VAL;
+void SysTick_Handler(void) {
+    systick_ms++;
+}
 
-    uint32_t elapsed_ticks;
-    if (last_val >= now) {
-        elapsed_ticks = last_val - now;
-    } else {
-        elapsed_ticks = last_val + (load - now);
+uint32_t SysTick_Get_Milliseconds(void) {
+  return systick_ms;
+}
+
+uint32_t SysTick_Get_Microseconds() {
+    uint32_t ms  = systick_ms;
+    uint32_t val = SYSTICK->VAL;
+    if (systick_ms != ms) {
+        ms  = systick_ms;
+        val = SYSTICK->VAL;
     }
-    last_val = now;
-
-    remainder += elapsed_ticks;
-    accumulated_us += remainder / ticks_per_us;
-    remainder %= ticks_per_us;
-
-    return accumulated_us;
+    uint32_t ticks_per_us = AHB_CLK / 1000000;
+    uint32_t us_in_ms = (SYSTICK_LOAD_VALUE - val) / ticks_per_us;
+    return ms * 1000 + us_in_ms;
 }
-
 void SysTick_Delay_Microseconds(uint32_t microseconds) {
     uint32_t ticks_per_us = AHB_CLK / 1000000;
     uint32_t ticks = ticks_per_us * microseconds;
